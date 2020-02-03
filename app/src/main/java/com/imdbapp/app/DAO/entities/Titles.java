@@ -18,7 +18,7 @@ public class Titles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false, nullable = false)
     private Long id;
-    @Column(name ="tConst")
+    @Column(name ="tConst", unique = true)
      private String tconst;
     @Column(name = "titleType")
      private String titleType ;
@@ -29,11 +29,11 @@ public class Titles {
     @Column (name = "isAdult")
     private Boolean isAdult;
     @Column (name = "startYear")
-    private Integer startYear ;
+    private Long startYear ;
     @Column (name = "endYear")
-    private String endYear;
+    private Long endYear;
     @Column (name ="runTime")
-    private String runtime;
+    private Long runtime;
     @Column (name = "genres")
     private String genres;
 

@@ -1,12 +1,14 @@
 package com.imdbapp.app.batch.titles;
 
 import com.imdbapp.app.DAO.entities.Titles;
+import com.imdbapp.app.DAO.entities.TitlesFromFile;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -36,7 +38,7 @@ public class titlesFileReaderBatchJob {
     DataSource dataSource;
 
 
-    @Value("classPath:/input/basic2.tsv")
+    @Value("classpath:/input/tt-Titles.tsv")
     private Resource inputResource;
 
     @Bean
@@ -52,32 +54,33 @@ public class titlesFileReaderBatchJob {
     public Step step() {
         return stepBuilderFactory
                 .get("step")
-                .<Titles, Titles>chunk(5)
+                .<TitlesFromFile, Titles>chunk(100)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
                 .build();
     }
+
     @Bean
-    public ItemProcessor<Titles, Titles> processor() {
+    public ItemProcessor<TitlesFromFile, Titles> processor() {
         return new titlesDataValidator();
     }
 
     @Bean
-    public FlatFileItemReader<Titles> reader() {
-        FlatFileItemReader<Titles> itemReader = new FlatFileItemReader<Titles>();
+    public FlatFileItemReader<TitlesFromFile> reader() {
+        FlatFileItemReader<TitlesFromFile> itemReader = new FlatFileItemReader<TitlesFromFile>();
         itemReader.setLineMapper(lineMapper());
         itemReader.setLinesToSkip(1);
         itemReader.setResource(inputResource);
         return itemReader;
     }
     @Bean
-    public LineMapper<Titles> lineMapper() {
-        DefaultLineMapper<Titles> lineMapper = new DefaultLineMapper<Titles>();
+    public LineMapper<TitlesFromFile> lineMapper() {
+        DefaultLineMapper<TitlesFromFile> lineMapper = new DefaultLineMapper<TitlesFromFile>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer(DelimitedLineTokenizer.DELIMITER_TAB);
-        lineTokenizer.setNames(new String[] { "tconst", "titleType", "primaryTitle", "originalTitle", "isAdult", "startYear", "endYear", "runtime", "genres" });
-        BeanWrapperFieldSetMapper<Titles> fieldSetMapper = new BeanWrapperFieldSetMapper<Titles>();
-        fieldSetMapper.setTargetType(Titles.class);
+        lineTokenizer.setNames("tconst", "titleType", "primaryTitle", "originalTitle", "isAdult", "startYear", "endYear", "runtime", "genres");
+        BeanWrapperFieldSetMapper<TitlesFromFile> fieldSetMapper = new BeanWrapperFieldSetMapper<TitlesFromFile>();
+        fieldSetMapper.setTargetType(TitlesFromFile.class);
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
         return lineMapper;
