@@ -1,9 +1,8 @@
-package com.imdbapp.app.com.com.imdbapp.services;
+package com.imdbapp.app.services;
 
-import com.imdbapp.app.com.imdbapp.DAO.entities.Titles;
-import com.imdbapp.app.com.imdbapp.DAO.repositories.TitlesRepository;
+import com.imdbapp.app.DAO.entities.Titles;
+import com.imdbapp.app.DAO.repositories.TitlesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service("titleServiceImpl")

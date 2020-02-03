@@ -1,8 +1,7 @@
-package com.imdbapp.app.com.imdb.controller;
+package com.imdbapp.app.controller;
 
-import com.imdbapp.app.com.com.imdbapp.services.TitleService;
-import com.imdbapp.app.com.com.imdbapp.services.TitleServiceImpl;
-import com.imdbapp.app.com.imdbapp.DAO.entities.Titles;
+import com.imdbapp.app.services.TitleServiceImpl;
+import com.imdbapp.app.DAO.entities.Titles;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

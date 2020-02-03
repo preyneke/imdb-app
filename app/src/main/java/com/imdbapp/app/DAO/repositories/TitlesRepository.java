@@ -1,6 +1,6 @@
-package com.imdbapp.app.com.imdbapp.DAO.repositories;
+package com.imdbapp.app.DAO.repositories;
 
-import com.imdbapp.app.com.imdbapp.DAO.entities.Titles;
+import com.imdbapp.app.DAO.entities.Titles;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TitlesRepository extends JpaRepository<Titles, Long> {

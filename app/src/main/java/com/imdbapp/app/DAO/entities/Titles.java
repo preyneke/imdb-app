@@ -1,4 +1,4 @@
-package com.imdbapp.app.com.imdbapp.DAO.entities;
+package com.imdbapp.app.DAO.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
