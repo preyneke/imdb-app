@@ -2,8 +2,12 @@ package com.imdbapp.app.services;
 
 import com.imdbapp.app.DAO.entities.Titles;
 import com.imdbapp.app.DAO.repositories.TitlesRepository;
+import com.imdbapp.app.DTO.TitlesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("titleServiceImpl")
 public class TitleServiceImpl implements TitleService {
@@ -16,5 +20,18 @@ public class TitleServiceImpl implements TitleService {
 
 
         return titlesRepository.findTitlesByTconst(tConst);
+    }
+
+    @Override
+    public List<TitlesDto> getTitlesByTitle(String title) {
+        List<Titles> titles = titlesRepository.findTitlesByOriginalTitleContaining(title);
+
+
+        return titles.stream()
+                .map( t -> TitlesDto.builder()
+                        .tconst(t.getTconst())
+                        .originalTitle(t.getOriginalTitle())
+                        .releaseYear(t.getStartYear())
+                        .build()).collect(Collectors.toList());
     }
 }

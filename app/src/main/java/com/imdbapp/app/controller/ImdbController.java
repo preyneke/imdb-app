@@ -1,5 +1,6 @@
 package com.imdbapp.app.controller;
 
+import com.imdbapp.app.DTO.TitlesDto;
 import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
 import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import com.imdbapp.app.services.TitleServiceImpl;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientResponseException;
+
+import java.util.List;
 
 
 @RestController
@@ -47,6 +50,12 @@ public class ImdbController {
     public Titles getTitleByTconst(String tconst){
 
         return titleService.getTitleBytconst(tconst);
+    }
+
+    @GetMapping("/getTitlesByTitle")
+    public List<TitlesDto> getTitlesByTitle(String title){
+
+        return titleService.getTitlesByTitle(title);
     }
 
     @PostMapping("/LooadTitlesFile")
