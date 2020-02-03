@@ -6,6 +6,7 @@ import com.imdbapp.app.DTO.TitlesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ public class TitleServiceImpl implements TitleService {
 
     @Override
     public List<TitlesDto> getTitlesByTitle(String title) {
+        //Pattern splitAtComma = Pattern.compile("\\s*.\\s*");
         List<Titles> titles = titlesRepository.findTitlesByOriginalTitleContaining(title);
 
 
@@ -32,6 +34,7 @@ public class TitleServiceImpl implements TitleService {
                         .tconst(t.getTconst())
                         .originalTitle(t.getOriginalTitle())
                         .releaseYear(t.getStartYear())
+                        .genres(Arrays.asList(t.getGenres().split("\\s*,\\s*")))
                         .build()).collect(Collectors.toList());
     }
 }

@@ -6,7 +6,6 @@ import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import com.imdbapp.app.services.TitleServiceImpl;
 import com.imdbapp.app.DAO.entities.Titles;
 import io.swagger.annotations.Api;
-import javassist.bytecode.stackmap.BasicBlock;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -18,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClientResponseException;
+
 
 import java.util.List;
 

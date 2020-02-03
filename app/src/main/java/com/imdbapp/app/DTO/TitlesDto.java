@@ -15,6 +15,6 @@ public class TitlesDto {
     private String tconst;
     private String originalTitle;
     private Long releaseYear;
-    private List<Genres> genres;
+    private List<String> genres;
 
 }
