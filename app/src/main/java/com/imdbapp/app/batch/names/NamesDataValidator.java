@@ -16,7 +16,7 @@ public class NamesDataValidator implements ItemProcessor<NamesFromFile, Names> {
         .knownForTitles(namesFromFile.getKnownForTitles())
         .primaryProfession(namesFromFile.getPrimaryProfession())
         .build();
-        System.out.println("Inserting title : " + namesFromFile);
+        System.out.println("Inserting Name : " + name);
         return name;
     }
 }

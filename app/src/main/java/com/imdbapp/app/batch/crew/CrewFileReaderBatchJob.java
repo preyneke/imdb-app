@@ -1,16 +1,13 @@
-package com.imdbapp.app.batch.names;
+package com.imdbapp.app.batch.crew;
 
+import com.imdbapp.app.DAO.entities.Crew;
+import com.imdbapp.app.DAO.entities.CrewFromFile;
 import com.imdbapp.app.DAO.entities.Names;
 import com.imdbapp.app.DAO.entities.NamesFromFile;
-import com.imdbapp.app.DAO.entities.Titles;
-import com.imdbapp.app.DAO.entities.TitlesFromFile;
-import com.imdbapp.app.batch.titles.TitlesDataValidator;
-import org.springframework.batch.core.Job;
+import com.imdbapp.app.batch.names.NamesDataValidator;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -29,7 +26,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableBatchProcessing
-public class NamesFileReaderBatchJob {
+public class CrewFileReaderBatchJob {
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
@@ -38,51 +35,51 @@ public class NamesFileReaderBatchJob {
     DataSource dataSource;
 
 
-    @Value("classpath:/input/nn-Names.tsv")
+    @Value("classpath:/input/nn-Crew.tsv")
     private Resource inputResource;
 
 
     @Bean
-    public Step readNamesStep() {
+    public Step readCrewStep() {
         return stepBuilderFactory
                 .get("step")
-                .<NamesFromFile, Names>chunk(100)
-                .reader(namereader())
-                .processor(nameprocessor())
-                .writer(namewriter())
+                .<CrewFromFile, Crew>chunk(100)
+                .reader(crewreader())
+                .processor(crewprocessor())
+                .writer(crewwriter())
                 .build();
     }
 
     @Bean
-    public ItemProcessor<NamesFromFile, Names> nameprocessor() {
-        return new NamesDataValidator();
+    public ItemProcessor<CrewFromFile, Crew> crewprocessor() {
+        return new CrewDataValidator();
     }
 
     @Bean
-    public FlatFileItemReader<NamesFromFile> namereader() {
-        FlatFileItemReader<NamesFromFile> itemReader = new FlatFileItemReader<NamesFromFile>();
-        itemReader.setLineMapper(namelineMapper());
+    public FlatFileItemReader<CrewFromFile> crewreader() {
+        FlatFileItemReader<CrewFromFile> itemReader = new FlatFileItemReader<CrewFromFile>();
+        itemReader.setLineMapper(crewlineMapper());
         itemReader.setLinesToSkip(1);
         itemReader.setResource(inputResource);
         return itemReader;
     }
     @Bean
-    public LineMapper<NamesFromFile> namelineMapper() {
-        DefaultLineMapper<NamesFromFile> lineMapper = new DefaultLineMapper<NamesFromFile>();
+    public LineMapper<CrewFromFile> crewlineMapper() {
+        DefaultLineMapper<CrewFromFile> lineMapper = new DefaultLineMapper<CrewFromFile>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer(DelimitedLineTokenizer.DELIMITER_TAB);
-        lineTokenizer.setNames("nconst", "primaryName", "birthYear", "deathYear", "primaryProfession", "knownForTitles");
-        BeanWrapperFieldSetMapper<NamesFromFile> fieldSetMapper = new BeanWrapperFieldSetMapper<NamesFromFile>();
-        fieldSetMapper.setTargetType(NamesFromFile.class);
+        lineTokenizer.setNames("tconst", "directors", "writers");
+        BeanWrapperFieldSetMapper<CrewFromFile> fieldSetMapper = new BeanWrapperFieldSetMapper<CrewFromFile>();
+        fieldSetMapper.setTargetType(CrewFromFile.class);
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
         return lineMapper;
     }
     @Bean
-    public JdbcBatchItemWriter<Names> namewriter() {
-        JdbcBatchItemWriter<Names> itemWriter = new JdbcBatchItemWriter<Names>();
+    public JdbcBatchItemWriter<Crew> crewwriter() {
+        JdbcBatchItemWriter<Crew> itemWriter = new JdbcBatchItemWriter<Crew>();
         itemWriter.setDataSource(dataSource);
-        itemWriter.setSql("INSERT INTO NAMES ( NCONST, PRIMARYNAME, BIRTHYEAR, deathYear, PRIMARYPROFESSION, KNOWNFORTITLES) VALUES (:nconst,  :primaryName, :birthYear, :deathYear, :primaryProfession, :knownForTitles);");
-        itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Names>());
+        itemWriter.setSql("INSERT INTO Crew ( tconst, directors, writers) VALUES (:tconst,  :directors, :writers);");
+        itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Crew>());
         return itemWriter;
     }
 }

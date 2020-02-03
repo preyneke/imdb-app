@@ -27,8 +27,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableBatchProcessing
 public class TitlesFileReaderBatchJob {
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;

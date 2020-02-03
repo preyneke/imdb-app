@@ -1,6 +1,7 @@
 package com.imdbapp.app.controller;
 
 import com.imdbapp.app.DTO.TitlesDto;
+import com.imdbapp.app.batch.crew.CrewFileReaderBatchJob;
 import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
 import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import com.imdbapp.app.services.TitleServiceImpl;
@@ -38,6 +39,8 @@ public class ImdbController {
     TitlesFileReaderBatchJob titlesFileReaderBatchJob;
     @Autowired
     NamesFileReaderBatchJob namesFileReaderBatchJob;
+    @Autowired
+    CrewFileReaderBatchJob crewFileReaderBatchJob;
 
 
     @GetMapping("/test")
@@ -79,6 +82,17 @@ public class ImdbController {
 
     }
 
+    @PostMapping("/LooadCrewFile")
+    public void loadCrewJob() throws Exception
+    {
+
+        JobParameters params = new JobParametersBuilder()
+                .addString("JobID", String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        jobLauncher.run(this.readCrewFileJob(), params);
+
+    }
+
     @Bean
     public Job readTitlesJob() {
         return jbf
@@ -93,6 +107,15 @@ public class ImdbController {
                 .get("readNamesFileJob")
                 .incrementer(new RunIdIncrementer())
                 .start(namesFileReaderBatchJob.readNamesStep())
+                .build();
+    }
+
+    @Bean
+    public Job readCrewFileJob(){
+        return jbf
+                .get("readCrewFileJob")
+                .incrementer(new RunIdIncrementer())
+                .start(crewFileReaderBatchJob.readCrewStep())
                 .build();
     }
 
