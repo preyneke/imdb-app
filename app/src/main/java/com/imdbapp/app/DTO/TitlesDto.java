@@ -1,5 +1,6 @@
 package com.imdbapp.app.DTO;
 
+import com.imdbapp.app.DAO.entities.Crew;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,6 @@ public class TitlesDto {
     private String originalTitle;
     private Long releaseYear;
     private List<String> genres;
+    private List<CrewDto> crew;
 
 }

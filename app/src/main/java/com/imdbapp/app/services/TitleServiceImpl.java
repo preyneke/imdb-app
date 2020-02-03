@@ -15,6 +15,10 @@ public class TitleServiceImpl implements TitleService {
 
     @Autowired
     private TitlesRepository titlesRepository;
+
+    @Autowired
+    CrewServiceImpl crewService;
+
     @Override
     public Titles getTitleBytconst(String tConst) {
 
@@ -28,12 +32,15 @@ public class TitleServiceImpl implements TitleService {
         //fetch list of titles
         List<Titles> titles = titlesRepository.findTitlesByOriginalTitleContaining(title);
         //return DTO
+
+
         return titles.stream()
                 .map( t -> TitlesDto.builder()
                         .tconst(t.getTconst())
                         .originalTitle(t.getOriginalTitle())
                         .releaseYear(t.getStartYear())
                         .genres(Arrays.asList(t.getGenres().split("\\s*,\\s*")))
+                        .crew(crewService.crewMembersByTconst(t.getTconst()))
                         .build()).collect(Collectors.toList());
     }
 }
