@@ -7,7 +7,7 @@ import org.springframework.batch.item.ItemProcessor;
 
 
 
-public class titlesDataValidator implements ItemProcessor<TitlesFromFile, Titles> {
+public class TitlesDataValidator implements ItemProcessor<TitlesFromFile, Titles> {
 
     public Titles process(TitlesFromFile title) throws Exception
     {

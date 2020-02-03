@@ -1,14 +1,16 @@
-package com.imdbapp.app.batch.titles;
+package com.imdbapp.app.batch.names;
 
+import com.imdbapp.app.DAO.entities.Names;
+import com.imdbapp.app.DAO.entities.NamesFromFile;
 import com.imdbapp.app.DAO.entities.Titles;
 import com.imdbapp.app.DAO.entities.TitlesFromFile;
+import com.imdbapp.app.batch.titles.TitlesDataValidator;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -27,7 +29,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableBatchProcessing
-public class titlesFileReaderBatchJob {
+public class NamesFileReaderBatchJob {
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
@@ -38,59 +40,52 @@ public class titlesFileReaderBatchJob {
     DataSource dataSource;
 
 
-    @Value("classpath:/input/tt-Titles.tsv")
+    @Value("classpath:/input/nn-Names.tsv")
     private Resource inputResource;
 
-    @Bean
-    public Job readCSVFileJob() {
-        return jobBuilderFactory
-                .get("readCSVFileJob")
-                .incrementer(new RunIdIncrementer())
-                .start(step())
-                .build();
-    }
 
     @Bean
-    public Step step() {
+    public Step readNamesStep() {
         return stepBuilderFactory
                 .get("step")
-                .<TitlesFromFile, Titles>chunk(100)
-                .reader(reader())
-                .processor(processor())
-                .writer(writer())
+                .<NamesFromFile, Names>chunk(100)
+                .reader(namereader())
+                .processor(nameprocessor())
+                .writer(namewriter())
                 .build();
     }
 
     @Bean
-    public ItemProcessor<TitlesFromFile, Titles> processor() {
-        return new titlesDataValidator();
+    public ItemProcessor<NamesFromFile, Names> nameprocessor() {
+        return new NamesDataValidator();
     }
 
     @Bean
-    public FlatFileItemReader<TitlesFromFile> reader() {
-        FlatFileItemReader<TitlesFromFile> itemReader = new FlatFileItemReader<TitlesFromFile>();
-        itemReader.setLineMapper(lineMapper());
+    public FlatFileItemReader<NamesFromFile> namereader() {
+        FlatFileItemReader<NamesFromFile> itemReader = new FlatFileItemReader<NamesFromFile>();
+        itemReader.setLineMapper(namelineMapper());
         itemReader.setLinesToSkip(1);
         itemReader.setResource(inputResource);
         return itemReader;
     }
     @Bean
-    public LineMapper<TitlesFromFile> lineMapper() {
-        DefaultLineMapper<TitlesFromFile> lineMapper = new DefaultLineMapper<TitlesFromFile>();
+    public LineMapper<NamesFromFile> namelineMapper() {
+        DefaultLineMapper<NamesFromFile> lineMapper = new DefaultLineMapper<NamesFromFile>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer(DelimitedLineTokenizer.DELIMITER_TAB);
-        lineTokenizer.setNames("tconst", "titleType", "primaryTitle", "originalTitle", "isAdult", "startYear", "endYear", "runtime", "genres");
-        BeanWrapperFieldSetMapper<TitlesFromFile> fieldSetMapper = new BeanWrapperFieldSetMapper<TitlesFromFile>();
-        fieldSetMapper.setTargetType(TitlesFromFile.class);
+        lineTokenizer.setNames("nconst", "primaryName", "birthYear", "deathYear", "primaryProfession", "knownForTitles");
+        BeanWrapperFieldSetMapper<NamesFromFile> fieldSetMapper = new BeanWrapperFieldSetMapper<NamesFromFile>();
+        fieldSetMapper.setTargetType(NamesFromFile.class);
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
         return lineMapper;
     }
     @Bean
-    public JdbcBatchItemWriter<Titles> writer() {
-        JdbcBatchItemWriter<Titles> itemWriter = new JdbcBatchItemWriter<Titles>();
+    public JdbcBatchItemWriter<Names> namewriter() {
+        JdbcBatchItemWriter<Names> itemWriter = new JdbcBatchItemWriter<Names>();
         itemWriter.setDataSource(dataSource);
-        itemWriter.setSql("INSERT INTO TITLES ( TCONST, TITLETYPE, PRIMARYTITLE, ORIGINALTITLE, ISADULT, STARTYEAR, ENDYEAR, RUNTIME, GENRES) VALUES (:tconst,  :titleType, :primaryTitle, :originalTitle, :isAdult, :startYear, :endYear, :runtime, :genres);");
-        itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Titles>());
+        itemWriter.setSql("INSERT INTO NAMES ( NCONST, PRIMARYNAME, BIRTHYEAR, deathYear, PRIMARYPROFESSION, KNOWNFORTITLES) VALUES (:nconst,  :primaryName, :birthYear, :deathYear, :primaryProfession, :knownForTitles);");
+        itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Names>());
         return itemWriter;
     }
 }
+
