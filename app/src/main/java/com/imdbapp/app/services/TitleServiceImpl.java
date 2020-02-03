@@ -25,10 +25,9 @@ public class TitleServiceImpl implements TitleService {
 
     @Override
     public List<TitlesDto> getTitlesByTitle(String title) {
-        //Pattern splitAtComma = Pattern.compile("\\s*.\\s*");
+        //fetch list of titles
         List<Titles> titles = titlesRepository.findTitlesByOriginalTitleContaining(title);
-
-
+        //return DTO
         return titles.stream()
                 .map( t -> TitlesDto.builder()
                         .tconst(t.getTconst())
