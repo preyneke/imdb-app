@@ -11,6 +11,7 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
@@ -34,6 +36,8 @@ public class TitlesFileReaderBatchJob {
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    EntityManagerFactory emf;
 
     @Value("classpath:/input/tt-Titles.tsv")
     private Resource inputResource;
@@ -75,11 +79,9 @@ public class TitlesFileReaderBatchJob {
         return lineMapper;
     }
     @Bean
-    public JdbcBatchItemWriter<Titles> titleswriter() {
-        JdbcBatchItemWriter<Titles> itemWriter = new JdbcBatchItemWriter<Titles>();
-        itemWriter.setDataSource(dataSource);
-        itemWriter.setSql("INSERT INTO TITLES ( TCONST, TITLETYPE, PRIMARYTITLE, ORIGINALTITLE, ISADULT, STARTYEAR, ENDYEAR, RUNTIME, GENRES) VALUES (:tconst,  :titleType, :primaryTitle, :originalTitle, :isAdult, :startYear, :endYear, :runtime, :genres);");
-        itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Titles>());
-        return itemWriter;
+    public JpaItemWriter titleswriter() {
+        JpaItemWriter writer = new JpaItemWriter();
+        writer.setEntityManagerFactory(emf);
+        return writer;
     }
 }
