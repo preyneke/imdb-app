@@ -4,6 +4,7 @@ import com.imdbapp.app.DTO.TitlesDto;
 import com.imdbapp.app.batch.crew.CrewFileReaderBatchJob;
 import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
 import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
+import com.imdbapp.app.exceptions.TitleNotFoundException;
 import com.imdbapp.app.services.TitleServiceImpl;
 import com.imdbapp.app.DAO.entities.Titles;
 import io.swagger.annotations.Api;
@@ -55,7 +56,7 @@ public class ImdbController {
     }
 
     @GetMapping("/getTitlesByTitle")
-    public List<TitlesDto> getTitlesByTitle(String title){
+    public List<TitlesDto> getTitlesByTitle(String title) throws TitleNotFoundException {
 
         return titleService.getTitlesByTitle(title);
     }
