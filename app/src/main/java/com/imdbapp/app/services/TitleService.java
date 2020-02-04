@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TitleService {
     Titles getTitleBytconst(String tConst);
-    List<TitlesDto> getTitlesByTitle(String title) throws TitleNotFoundException;
+    List<TitlesDto> getTitlesByTitle(String title, int size) throws TitleNotFoundException;
 }

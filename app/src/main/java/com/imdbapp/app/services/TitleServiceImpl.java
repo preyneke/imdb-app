@@ -5,6 +5,9 @@ import com.imdbapp.app.DAO.repositories.TitlesRepository;
 import com.imdbapp.app.DTO.TitlesDto;
 import com.imdbapp.app.exceptions.TitleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -23,6 +26,7 @@ public class TitleServiceImpl implements TitleService {
     @Autowired
     PrincipalsService principalsService;
 
+
     @Override
     public Titles getTitleBytconst(String tConst) {
 
@@ -31,10 +35,13 @@ public class TitleServiceImpl implements TitleService {
     }
 
     @Override
-    public List<TitlesDto> getTitlesByTitle(String title) throws TitleNotFoundException {
+    public List<TitlesDto> getTitlesByTitle(String title, int size) throws TitleNotFoundException {
 
         try { //fetch list of titles
-            List<Titles> titles = titlesRepository.findTitlesByOriginalTitleContaining(title);
+            Pageable firstxElements = PageRequest.of(0,size);
+            Pageable secondPageWithFiveElements = PageRequest.of(1, 5);
+
+            List<Titles> titles = titlesRepository.findTitlesByOriginalTitleContaining(title, firstxElements);
             //return DTO
         if(titles.isEmpty()) {
              throw  new Exception();

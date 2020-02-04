@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -47,9 +48,9 @@ public class ImdbController {
     }
 
     @GetMapping("/getTitlesByTitle")
-    public List<TitlesDto> getTitlesByTitle(String title) throws TitleNotFoundException {
+    public List<TitlesDto> getTitlesByTitle(@RequestParam("search") String title, @RequestParam("resultSize") int size) throws TitleNotFoundException {
 
-        return titleService.getTitlesByTitle(title);
+        return titleService.getTitlesByTitle(title, size);
     }
 
 
