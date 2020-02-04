@@ -32,19 +32,7 @@ public class ImdbController {
     @Autowired
    private TitleServiceImpl titleService;
 
-    @Autowired
-    private JobLauncher jobLauncher;
 
-    @Autowired
-    private JobBuilderFactory jbf;
-    @Autowired
-    TitlesFileReaderBatchJob titlesFileReaderBatchJob;
-    @Autowired
-    NamesFileReaderBatchJob namesFileReaderBatchJob;
-    @Autowired
-    CrewFileReaderBatchJob crewFileReaderBatchJob;
-    @Autowired
-    PrincipalsFileReaderBatchJob principalsFileReaderBatchJob;
 
 
     @GetMapping("/test")
@@ -64,83 +52,5 @@ public class ImdbController {
         return titleService.getTitlesByTitle(title);
     }
 
-    @PostMapping("/LooadTitlesFile")
-    public void loadTitleJob() throws Exception
-    {
-
-            JobParameters params = new JobParametersBuilder()
-                    .addString("JobID", String.valueOf(System.currentTimeMillis()))
-                    .toJobParameters();
-            jobLauncher.run(this.readTitlesJob(), params);
-
-    }
-
-    @PostMapping("/LooadNamesFile")
-    public void loadNameJob() throws Exception
-    {
-
-        JobParameters params = new JobParametersBuilder()
-                .addString("JobID", String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
-        jobLauncher.run(this.readNamesFileJob(), params);
-
-    }
-
-    @PostMapping("/LooadCrewFile")
-    public void loadCrewJob() throws Exception
-    {
-
-        JobParameters params = new JobParametersBuilder()
-                .addString("JobID", String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
-        jobLauncher.run(this.readCrewFileJob(), params);
-
-    }
-
-    @PostMapping("/LooadPrincipalsFile")
-    public void loadPrincipalsJob() throws Exception
-    {
-
-        JobParameters params = new JobParametersBuilder()
-                .addString("JobID", String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
-        jobLauncher.run(this.readPrincipalsFileJob(), params);
-
-    }
-
-    @Bean
-    public Job readTitlesJob() {
-        return jbf
-                .get("readTitlesFileJob")
-                .incrementer(new RunIdIncrementer())
-                .start(titlesFileReaderBatchJob.readTitlesstep())
-                .build();
-    }
-    @Bean
-    public Job readNamesFileJob() {
-        return jbf
-                .get("readNamesFileJob")
-                .incrementer(new RunIdIncrementer())
-                .start(namesFileReaderBatchJob.readNamesStep())
-                .build();
-    }
-
-    @Bean
-    public Job readCrewFileJob(){
-        return jbf
-                .get("readCrewFileJob")
-                .incrementer(new RunIdIncrementer())
-                .start(crewFileReaderBatchJob.readCrewStep())
-                .build();
-    }
-
-    @Bean
-    public Job readPrincipalsFileJob(){
-        return jbf
-                .get("readPrincipalsFileJob")
-                .incrementer(new RunIdIncrementer())
-                .start(principalsFileReaderBatchJob.readPrincipalsStep())
-                .build();
-    }
 
 }
