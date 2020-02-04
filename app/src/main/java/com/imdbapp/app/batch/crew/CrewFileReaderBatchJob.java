@@ -11,6 +11,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
@@ -33,6 +35,9 @@ public class CrewFileReaderBatchJob {
 
     @Autowired
     DataSource dataSource;
+
+    @Autowired
+    EntityManagerFactory emf;
 
 
     @Value("classpath:/input/nn-Crew.tsv")
@@ -75,12 +80,10 @@ public class CrewFileReaderBatchJob {
         return lineMapper;
     }
     @Bean
-    public JdbcBatchItemWriter<Crew> crewwriter() {
-        JdbcBatchItemWriter<Crew> itemWriter = new JdbcBatchItemWriter<Crew>();
-        itemWriter.setDataSource(dataSource);
-        itemWriter.setSql("INSERT INTO Crew ( tconst, directors, writers) VALUES (:tconst,  :directors, :writers);");
-        itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Crew>());
-        return itemWriter;
+    public JpaItemWriter crewwriter() {
+        JpaItemWriter writer = new JpaItemWriter();
+        writer.setEntityManagerFactory(emf);
+        return writer;
     }
 }
 
