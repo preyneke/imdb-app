@@ -5,7 +5,6 @@ import com.imdbapp.app.DAO.entities.PrincipalsFromFile;
 import com.imdbapp.app.constants.Constants;
 import org.springframework.batch.item.ItemProcessor;
 
-import java.util.Arrays;
 
 public class PrincipalsDataValidator implements ItemProcessor<PrincipalsFromFile, Principals> {
     @Override

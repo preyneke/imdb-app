@@ -3,6 +3,7 @@ package com.imdbapp.app.controller;
 import com.imdbapp.app.batch.crew.CrewFileReaderBatchJob;
 import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
 import com.imdbapp.app.batch.principles.PrincipalsFileReaderBatchJob;
+import com.imdbapp.app.batch.ratings.RatingsFileReaderBatchJob;
 import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import io.swagger.annotations.Api;
 import org.springframework.batch.core.Job;
@@ -26,18 +27,22 @@ public class DataController {
     private JobBuilderFactory jbf;
 
     @Autowired
-    TitlesFileReaderBatchJob titlesFileReaderBatchJob;
+    private TitlesFileReaderBatchJob titlesFileReaderBatchJob;
 
     @Autowired
-    NamesFileReaderBatchJob namesFileReaderBatchJob;
+    private NamesFileReaderBatchJob namesFileReaderBatchJob;
 
     @Autowired
-    CrewFileReaderBatchJob crewFileReaderBatchJob;
+    private CrewFileReaderBatchJob crewFileReaderBatchJob;
 
     @Autowired
-    PrincipalsFileReaderBatchJob principalsFileReaderBatchJob;
+    private PrincipalsFileReaderBatchJob principalsFileReaderBatchJob;
 
-    @PostMapping("/LooadTitlesFile")
+    @Autowired
+   private  RatingsFileReaderBatchJob ratingsFileReaderBatchJob;
+
+
+    @PostMapping("/LoadTitlesFile")
     public void loadTitleJob() throws Exception
     {
 
@@ -48,7 +53,7 @@ public class DataController {
 
     }
 
-    @PostMapping("/LooadNamesFile")
+    @PostMapping("/LoadNamesFile")
     public void loadNameJob() throws Exception
     {
 
@@ -59,7 +64,7 @@ public class DataController {
 
     }
 
-    @PostMapping("/LooadCrewFile")
+    @PostMapping("/LoadCrewFile")
     public void loadCrewJob() throws Exception
     {
 
@@ -70,7 +75,7 @@ public class DataController {
 
     }
 
-    @PostMapping("/LooadPrincipalsFile")
+    @PostMapping("/LoadPrincipalsFile")
     public void loadPrincipalsJob() throws Exception
     {
 
@@ -78,6 +83,16 @@ public class DataController {
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
         jobLauncher.run(this.readPrincipalsFileJob(), params);
+
+    }
+    @PostMapping("/LoadRatingsFile")
+    public void loadRatingsJob() throws Exception
+    {
+
+        JobParameters params = new JobParametersBuilder()
+                .addString("JobID", String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        jobLauncher.run(this.readRatingsFileJob(), params);
 
     }
 
@@ -115,5 +130,15 @@ public class DataController {
                 .start(principalsFileReaderBatchJob.readPrincipalsStep())
                 .build();
     }
+
+    @Bean
+    public Job readRatingsFileJob(){
+        return jbf
+                .get("readRatingsFileJob")
+                .incrementer(new RunIdIncrementer())
+                .start(ratingsFileReaderBatchJob.readRatingsStep())
+                .build();
+    }
+
 
 }
