@@ -14,6 +14,7 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
@@ -36,6 +38,9 @@ public class NamesFileReaderBatchJob {
 
     @Autowired
     DataSource dataSource;
+
+    @Autowired
+    EntityManagerFactory emf;
 
 
     @Value("classpath:/input/nn-Names.tsv")
@@ -78,12 +83,10 @@ public class NamesFileReaderBatchJob {
         return lineMapper;
     }
     @Bean
-    public JdbcBatchItemWriter<Names> namewriter() {
-        JdbcBatchItemWriter<Names> itemWriter = new JdbcBatchItemWriter<Names>();
-        itemWriter.setDataSource(dataSource);
-        itemWriter.setSql("INSERT INTO NAMES ( NCONST, PRIMARYNAME, BIRTHYEAR, deathYear, PRIMARYPROFESSION, KNOWNFORTITLES) VALUES (:nconst,  :primaryName, :birthYear, :deathYear, :primaryProfession, :knownForTitles);");
-        itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Names>());
-        return itemWriter;
+    public JpaItemWriter namewriter() {
+        JpaItemWriter writer = new JpaItemWriter();
+        writer.setEntityManagerFactory(emf);
+        return writer;
     }
 }
 
