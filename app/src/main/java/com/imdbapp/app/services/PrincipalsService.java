@@ -1,9 +1,9 @@
 package com.imdbapp.app.services;
 
-import com.imdbapp.app.DTO.PrincipalsDto;
+import com.imdbapp.app.DTO.CastDto;
 
 import java.util.List;
 
 public interface PrincipalsService {
-    List<PrincipalsDto> principalsByTconst(String tconst);
+    List<CastDto> principalsByTconst(String tconst);
 }

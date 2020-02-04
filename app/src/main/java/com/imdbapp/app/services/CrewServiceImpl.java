@@ -23,11 +23,31 @@ public class CrewServiceImpl implements CrewService {
     @Override
     public List<CrewDto> crewMembersByTconst(String tconst) {
 
+        //Get names of Crew members associated to film
         Crew crewNames = crewRepository.findByTconst(tconst);
-        List<String> directors = (crewNames.getDirectors()!=null)? Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*")): new ArrayList<>();
-        List<String> writersList = (crewNames.getWriters()!=null)? Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*")): new ArrayList<>();
-       List<CrewDto> crew = directors.stream().map( c -> CrewDto.builder().nconst(c).primaryName((namesRepository.findByNconst(c) != null)? namesRepository.findByNconst(c).getPrimaryName(): "N/A").creditedAs("Director").build()).collect(Collectors.toList());
-       List<CrewDto> writers = (!writersList.isEmpty())? writersList.stream().map(w -> CrewDto.builder().nconst(w).primaryName((namesRepository.findByNconst(w) != null)? namesRepository.findByNconst(w).getPrimaryName(): "N/A").creditedAs("writer").build()).collect(Collectors.toList()): new ArrayList<>();
+
+        //Assemble Directors
+        List<String> directors = (crewNames.getDirectors()!=null)?  Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*"))
+                                                                 :  new ArrayList<>();
+        //Writers Assemble
+        List<String> writersList = (crewNames.getWriters()!=null)? Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*"))
+                                                                 : new ArrayList<>();
+        //Start Crew List
+       List<CrewDto> crew = directors.stream()
+                                     .map( c -> CrewDto.builder()
+                                                       .nconst(c)
+                                                       .primaryName((namesRepository.findByNconst(c)!= null)? namesRepository.findByNconst(c).getPrimaryName(): "N/A")
+                                                       .creditedAs("Director")
+                                                       .build()).collect(Collectors.toList());
+       //Add Writers
+       List<CrewDto> writers = (!writersList.isEmpty())? writersList.stream()
+                                                            .map(w -> CrewDto.builder()
+                                                                             .nconst(w)
+                                                                             .primaryName((namesRepository.findByNconst(w) != null)? namesRepository.findByNconst(w).getPrimaryName(): "N/A")
+                                                                             .creditedAs("writer")
+                                                                          .build()).collect(Collectors.toList()): new ArrayList<>();
+
+       //If no writers then only return Directors in crew list
         if(!writers.isEmpty()){
             crew.addAll(writers);
         }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PrincipalsDto {
+public class CastDto {
 
    private String nconst;
    private String tconst;

@@ -20,6 +20,9 @@ public class TitleServiceImpl implements TitleService {
     @Autowired
     CrewServiceImpl crewService;
 
+    @Autowired
+    PrincipalsService principalsService;
+
     @Override
     public Titles getTitleBytconst(String tConst) {
 
@@ -44,6 +47,7 @@ public class TitleServiceImpl implements TitleService {
                             .releaseYear(t.getStartYear())
                             .genres(Arrays.asList(t.getGenres().split("\\s*,\\s*")))
                             .crew(crewService.crewMembersByTconst(t.getTconst()))
+                            .cast(principalsService.principalsByTconst(t.getTconst()))
                             .build()).collect(Collectors.toList());
         } catch (Exception e) {
             throw new TitleNotFoundException("No title with That name found");
