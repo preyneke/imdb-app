@@ -17,6 +17,7 @@ public class TitlesDto {
     private String originalTitle;
     private Long releaseYear;
     private List<String> genres;
+    private List<PrincipalsDto> cast;
     private List<CrewDto> crew;
 
 }
