@@ -3,6 +3,7 @@ package com.imdbapp.app.controller;
 import com.imdbapp.app.DTO.TitlesDto;
 import com.imdbapp.app.batch.crew.CrewFileReaderBatchJob;
 import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
+import com.imdbapp.app.batch.principles.PrincipalsFileReaderBatchJob;
 import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import com.imdbapp.app.exceptions.TitleNotFoundException;
 import com.imdbapp.app.services.TitleServiceImpl;
@@ -42,6 +43,8 @@ public class ImdbController {
     NamesFileReaderBatchJob namesFileReaderBatchJob;
     @Autowired
     CrewFileReaderBatchJob crewFileReaderBatchJob;
+    @Autowired
+    PrincipalsFileReaderBatchJob principalsFileReaderBatchJob;
 
 
     @GetMapping("/test")
@@ -94,6 +97,17 @@ public class ImdbController {
 
     }
 
+    @PostMapping("/LooadPrincipalsFile")
+    public void loadPrincipalsJob() throws Exception
+    {
+
+        JobParameters params = new JobParametersBuilder()
+                .addString("JobID", String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        jobLauncher.run(this.readPrincipalsFileJob(), params);
+
+    }
+
     @Bean
     public Job readTitlesJob() {
         return jbf
@@ -117,6 +131,15 @@ public class ImdbController {
                 .get("readCrewFileJob")
                 .incrementer(new RunIdIncrementer())
                 .start(crewFileReaderBatchJob.readCrewStep())
+                .build();
+    }
+
+    @Bean
+    public Job readPrincipalsFileJob(){
+        return jbf
+                .get("readPrincipalsFileJob")
+                .incrementer(new RunIdIncrementer())
+                .start(principalsFileReaderBatchJob.readPrincipalsStep())
                 .build();
     }
 
