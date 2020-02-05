@@ -10,29 +10,37 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service("titleServiceImpl")
+@Service
 public class TitleServiceImpl implements TitleService {
 
-    @Autowired
+    @Resource
     private TitlesRepository titlesRepository;
 
-    @Autowired
-    CrewServiceImpl crewService;
+    @Resource
+    CrewService crewService;
 
-    @Autowired
+    @Resource
     PrincipalsService principalsService;
 
 
     @Override
-    public Titles getTitleBytconst(String tConst) {
+    public List<String> getTitlesNameByTconst(List<String> tconst) {
 
-
-        return titlesRepository.findTitlesByTconst(tConst);
+        List<Titles> titles= titlesRepository.findTitlesByTconstIn(tconst);
+        List<String> primaryTitles = titles.stream().map( a -> a.getPrimaryTitle()).collect(Collectors.toList());
+        return primaryTitles;
     }
+
+    @Override
+    public Titles getTitleBytconst(String tConst) {
+        return null;
+    }
+
 
     @Override
     public List<TitlesDto> getTitlesByTitle(String title, int size) throws TitleNotFoundException {

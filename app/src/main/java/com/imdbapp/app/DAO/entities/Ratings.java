@@ -6,18 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Ratings {
+@Table(name = "ratings")
+public class Ratings implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false, nullable = false)
     private Long id;
-    @Column(name = "tconst", unique = true)
+    @Column(name = "tconst")
     private String tconst;
     @Column(name = "averageRating")
     private Double averageRating;

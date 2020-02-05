@@ -2,7 +2,7 @@ package com.imdbapp.app.controller;
 
 import com.imdbapp.app.batch.crew.CrewFileReaderBatchJob;
 import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
-import com.imdbapp.app.batch.principles.PrincipalsFileReaderBatchJob;
+import com.imdbapp.app.batch.principals.PrincipalsFileReaderBatchJob;
 import com.imdbapp.app.batch.ratings.RatingsFileReaderBatchJob;
 import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import io.swagger.annotations.Api;

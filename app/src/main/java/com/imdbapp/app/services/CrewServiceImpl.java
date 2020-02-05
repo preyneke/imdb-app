@@ -8,29 +8,32 @@ import com.imdbapp.app.DTO.CrewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-@Service("crewServiceImpl")
+@Service
 public class CrewServiceImpl implements CrewService {
-    @Autowired
+
+    @Resource
     CrewRepository crewRepository;
 
-    @Autowired
+    @Resource
     NamesRepository namesRepository;
 
     @Override
     public List<CrewDto> crewMembersByTconst(String tconst) {
 
         //Get names of Crew members associated to film
+
         Crew crewNames = crewRepository.findByTconst(tconst);
 
         //Assemble Directors
-        List<String> directors = (crewNames.getDirectors()!=null)?  Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*"))
+        List<String> directors = (crewNames!=null && crewNames.getDirectors() != null)?  Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*"))
                                                                  :  new ArrayList<>();
         //Writers Assemble
-        List<String> writersList = (crewNames.getWriters()!=null)? Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*"))
+        List<String> writersList = (crewNames!=null && crewNames.getWriters() != null)? Arrays.asList(crewNames.getDirectors().split("\\s*,\\s*"))
                                                                  : new ArrayList<>();
         //Start Crew List
        List<CrewDto> crew = directors.stream()

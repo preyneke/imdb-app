@@ -63,7 +63,7 @@ public class TitlesFileReaderBatchJob {
     public FlatFileItemReader<TitlesFromFile> titlesreader() {
         FlatFileItemReader<TitlesFromFile> itemReader = new FlatFileItemReader<TitlesFromFile>();
         itemReader.setLineMapper(titleslineMapper());
-        itemReader.setLinesToSkip(1);
+        itemReader.setLinesToSkip(0);
         itemReader.setResource(inputResource);
         return itemReader;
     }

@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CastDto {
-
-   private String nconst;
-   private String name;
-   private String character;
-   private String job;
+public class KnownForFilmsDto {
+    private String primaryTitle;
+    private Long year;
 }

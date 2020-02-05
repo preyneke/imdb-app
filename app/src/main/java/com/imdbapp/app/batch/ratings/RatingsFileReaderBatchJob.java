@@ -1,10 +1,7 @@
 package com.imdbapp.app.batch.ratings;
 
-import com.imdbapp.app.DAO.entities.Principals;
-import com.imdbapp.app.DAO.entities.PrincipalsFromFile;
 import com.imdbapp.app.DAO.entities.Ratings;
 import com.imdbapp.app.DAO.entities.RatingsFromFile;
-import com.imdbapp.app.batch.principles.PrincipalsDataValidator;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;

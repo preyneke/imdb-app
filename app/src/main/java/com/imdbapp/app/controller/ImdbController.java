@@ -1,26 +1,14 @@
 package com.imdbapp.app.controller;
 
-import com.imdbapp.app.DTO.RatingsByGenre;
+import com.imdbapp.app.DTO.ActorDto;
+import com.imdbapp.app.DTO.TopTitlesDto;
 import com.imdbapp.app.DTO.TitlesDto;
-import com.imdbapp.app.batch.crew.CrewFileReaderBatchJob;
-import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
-import com.imdbapp.app.batch.principles.PrincipalsFileReaderBatchJob;
-import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import com.imdbapp.app.exceptions.TitleNotFoundException;
-import com.imdbapp.app.services.TitleServiceImpl;
+import com.imdbapp.app.services.*;
 import com.imdbapp.app.DAO.entities.Titles;
-import com.imdbapp.app.services.TopTitlesServiceImpl;
 import io.swagger.annotations.Api;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,9 +21,11 @@ import java.util.List;
 public class ImdbController {
 
     @Autowired
-   private TitleServiceImpl titleService;
+    TitleService titleService;
     @Autowired
-    TopTitlesServiceImpl topTitlesService;
+    TopTitlesService topTitlesService;
+    @Autowired
+    PrincipalsService principalsService;
 
 
 
@@ -58,9 +48,15 @@ public class ImdbController {
     }
 
     @GetMapping("/topTitles")
-    public List<RatingsByGenre> getTopTitlesByGenre(@RequestParam("genre") String genre, @RequestParam("numberOfResults") int size) throws TitleNotFoundException {
+    public List<TopTitlesDto> getTopTitlesByGenre(@RequestParam("genre") String genre, @RequestParam("numberOfResults") int size) throws TitleNotFoundException {
 
         return topTitlesService.findTopTitlesByGenre(genre,size) ;
+    }
+
+    @GetMapping("/actors")
+    public List<ActorDto> getActorByName(@RequestParam("name") String name) throws TitleNotFoundException {
+
+        return principalsService.listOfActorsByName(name);
     }
 
 

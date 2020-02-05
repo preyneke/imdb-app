@@ -1,4 +1,4 @@
-package com.imdbapp.app.batch.principles;
+package com.imdbapp.app.batch.principals;
 
 import com.imdbapp.app.DAO.entities.Principals;
 import com.imdbapp.app.DAO.entities.PrincipalsFromFile;

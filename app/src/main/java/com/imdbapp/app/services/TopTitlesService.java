@@ -1,9 +1,10 @@
 package com.imdbapp.app.services;
 
-import com.imdbapp.app.DTO.RatingsByGenre;
+import com.imdbapp.app.DTO.TopTitlesDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public interface TopTitlesService {
-    List<RatingsByGenre> findTopTitlesByGenre(String genre, int numberOfResults);
+    List<TopTitlesDto> findTopTitlesByGenre(String genre, int numberOfResults);
 }

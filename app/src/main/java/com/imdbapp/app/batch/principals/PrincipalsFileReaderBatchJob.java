@@ -1,4 +1,4 @@
-package com.imdbapp.app.batch.principles;
+package com.imdbapp.app.batch.principals;
 
 import com.imdbapp.app.DAO.entities.Principals;
 import com.imdbapp.app.DAO.entities.PrincipalsFromFile;
@@ -6,8 +6,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
@@ -36,7 +34,7 @@ public class PrincipalsFileReaderBatchJob {
     EntityManagerFactory emf;
 
 
-    @Value("classpath:/input/nn-Principles.tsv")
+    @Value("classpath:/input/nn-Principals.tsv")
     private Resource inputResource;
 
 

@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RatingsByGenre {
+public class TopTitlesDto {
 private Long number;
     private String tconst;
     private String originalTitle;

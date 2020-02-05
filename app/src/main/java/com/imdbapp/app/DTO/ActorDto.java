@@ -5,14 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CastDto {
-
-   private String nconst;
-   private String name;
-   private String character;
-   private String job;
+public class ActorDto {
+    private String name;
+    private List<String> knownForFilms;
 }

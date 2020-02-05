@@ -1,6 +1,6 @@
 package com.imdbapp.app.DAO.sprocs;
 
-import com.imdbapp.app.DTO.RatingsByGenre;
+import com.imdbapp.app.DTO.TopTitlesDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
@@ -10,7 +10,6 @@ import org.springframework.jdbc.object.StoredProcedure;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +31,11 @@ public class TopGenresStoredProcedure extends StoredProcedure {
         compile();
     }
 
-    public List<RatingsByGenre> topTitlesByGenre(String genre, int numberOfResults){
+    public List<TopTitlesDto> topTitlesByGenre(String genre, int numberOfResults){
 
         String likeGenre = new String("%"+ genre+"%");
         Map data = executeSproc(likeGenre,numberOfResults);
-        List<RatingsByGenre> listOfTitles = (List<RatingsByGenre>) data.get(QUERY_RESULTS);
+        List<TopTitlesDto> listOfTitles = (List<TopTitlesDto>) data.get(QUERY_RESULTS);
 
 
         return listOfTitles;
@@ -54,15 +53,15 @@ public class TopGenresStoredProcedure extends StoredProcedure {
    class TopGenresRowMapper implements RowMapper{
 
        @Override
-       public RatingsByGenre mapRow(ResultSet resultSet, int row) throws SQLException {
+       public TopTitlesDto mapRow(ResultSet resultSet, int row) throws SQLException {
 
-           RatingsByGenre ratingsByGenre = RatingsByGenre.builder()
+           TopTitlesDto topTitlesDto = TopTitlesDto.builder()
                    .number(resultSet.getLong("number"))
                    .tconst(resultSet.getString("tConst"))
                    .originalTitle(resultSet.getString("originalTitle"))
                    .averageRating(resultSet.getDouble("averageRating"))
                    .numberOfVotes(resultSet.getLong("numberOfVotes"))
                    .build();
-           return ratingsByGenre;
+           return topTitlesDto;
        }
    }
