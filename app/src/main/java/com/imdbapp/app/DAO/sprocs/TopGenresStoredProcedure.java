@@ -1,5 +1,6 @@
 package com.imdbapp.app.DAO.sprocs;
 
+import com.imdbapp.app.DTO.RatingsByGenre;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
@@ -11,18 +12,19 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TopGenresStoredProcedure extends StoredProcedure {
 
     public static final String topGenresSproc = "titles_getTopGenres";
-    public static final String QUERY_RESULTS = rowmapper;
+    public static final String QUERY_RESULTS = "RESULTS";
 
     public TopGenresStoredProcedure(JdbcTemplate jdbcTemplate) {
 
         super(jdbcTemplate, topGenresSproc);
-        RowMapper rowMapper = new
-        declareParameter(new SqlReturnResultSet(QUERY_RESULTS, rowma) -> {return rs.("canLogin");}));
+        RowMapper rowMapper = new TopGenresRowMapper();
+        declareParameter(new SqlReturnResultSet(QUERY_RESULTS, rowMapper));
         declareParameter(new SqlParameter("genre", Types.VARCHAR));
         declareParameter(new SqlParameter("numberOfResults", Types.INTEGER));
 
@@ -30,20 +32,20 @@ public class TopGenresStoredProcedure extends StoredProcedure {
         compile();
     }
 
-    public boolean canLogin(Integer siloID, String login){
+    public List<RatingsByGenre> topTitlesByGenre(String genre, int numberOfResults){
 
-        TrustAccountLimitsDTO DTO = new TrustAccountLimitsDTO();
-        Map data = executeSproc(siloID,login);
-        ArrayList results = (ArrayList) data.get(QUERY_RESULTS);
-        boolean canLogin = (Boolean) results.get(0);
+        String likeGenre = new String("%"+ genre+"%");
+        Map data = executeSproc(likeGenre,numberOfResults);
+        List<RatingsByGenre> listOfTitles = (List<RatingsByGenre>) data.get(QUERY_RESULTS);
 
-        return canLogin;
+
+        return listOfTitles;
     }
 
-    public Map executeSproc(Integer siloID, String login) {
+    public Map executeSproc(String genre, int numberOfResults) {
         Map inParams = new HashMap();
-        inParams.put("siloID", siloID);
-        inParams.put("login", login);
+        inParams.put("genre", genre);
+        inParams.put("numberOfResults", numberOfResults);
         Map out = execute(inParams);
         return out;
     }
@@ -52,7 +54,14 @@ public class TopGenresStoredProcedure extends StoredProcedure {
    class TopGenresRowMapper implements RowMapper{
 
        @Override
-       public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-           return null;
+       public RatingsByGenre mapRow(ResultSet resultSet, int row) throws SQLException {
+
+           RatingsByGenre ratingsByGenre = RatingsByGenre.builder()
+                   .tconst(resultSet.getString("tConst"))
+                   .originalTitle(resultSet.getString("originalTitle"))
+                   .averageRating(resultSet.getDouble("averageRating"))
+                   .numberOfVotes(resultSet.getLong("numberOfVotes"))
+                   .build();
+           return ratingsByGenre;
        }
    }

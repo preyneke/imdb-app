@@ -1,5 +1,6 @@
 package com.imdbapp.app.controller;
 
+import com.imdbapp.app.DTO.RatingsByGenre;
 import com.imdbapp.app.DTO.TitlesDto;
 import com.imdbapp.app.batch.crew.CrewFileReaderBatchJob;
 import com.imdbapp.app.batch.names.NamesFileReaderBatchJob;
@@ -8,6 +9,7 @@ import com.imdbapp.app.batch.titles.TitlesFileReaderBatchJob;
 import com.imdbapp.app.exceptions.TitleNotFoundException;
 import com.imdbapp.app.services.TitleServiceImpl;
 import com.imdbapp.app.DAO.entities.Titles;
+import com.imdbapp.app.services.TopTitlesServiceImpl;
 import io.swagger.annotations.Api;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -32,6 +34,8 @@ public class ImdbController {
 
     @Autowired
    private TitleServiceImpl titleService;
+    @Autowired
+    TopTitlesServiceImpl topTitlesService;
 
 
 
@@ -51,6 +55,12 @@ public class ImdbController {
     public List<TitlesDto> getTitlesByTitle(@RequestParam("search") String title, @RequestParam("resultSize") int size) throws TitleNotFoundException {
 
         return titleService.getTitlesByTitle(title, size);
+    }
+
+    @GetMapping("/topTitles")
+    public List<RatingsByGenre> getTopTitlesByGenre(@RequestParam("genre") String genre, @RequestParam("numberOfResults") int size) throws TitleNotFoundException {
+
+        return topTitlesService.findTopTitlesByGenre(genre,size) ;
     }
 
 
