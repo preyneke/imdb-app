@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Builder
 public class RatingsByGenre {
-
+private Long number;
     private String tconst;
     private String originalTitle;
     private Double averageRating;

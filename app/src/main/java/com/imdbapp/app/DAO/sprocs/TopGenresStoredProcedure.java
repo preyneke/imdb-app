@@ -57,6 +57,7 @@ public class TopGenresStoredProcedure extends StoredProcedure {
        public RatingsByGenre mapRow(ResultSet resultSet, int row) throws SQLException {
 
            RatingsByGenre ratingsByGenre = RatingsByGenre.builder()
+                   .number(resultSet.getLong("number"))
                    .tconst(resultSet.getString("tConst"))
                    .originalTitle(resultSet.getString("originalTitle"))
                    .averageRating(resultSet.getDouble("averageRating"))
