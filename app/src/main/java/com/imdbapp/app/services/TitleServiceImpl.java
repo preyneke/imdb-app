@@ -68,4 +68,21 @@ public class TitleServiceImpl implements TitleService {
             throw new TitleNotFoundException("No title with That name found");
         }
     }
+
+    @Override
+    public Titles getTitleByPrimaryTitle(String originalTitle) throws TitleNotFoundException {
+        try {
+
+
+            Titles title = titlesRepository.findTitlesByOriginalTitle(originalTitle);
+            //return DTO
+            if(title == null) {
+                throw  new Exception();
+            }
+
+            return  title;
+        } catch (Exception e) {
+            throw new TitleNotFoundException("No title with That name found");
+        }
+    }
 }

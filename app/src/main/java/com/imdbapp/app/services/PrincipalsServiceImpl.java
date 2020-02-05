@@ -2,11 +2,14 @@ package com.imdbapp.app.services;
 
 import com.imdbapp.app.DAO.entities.Names;
 import com.imdbapp.app.DAO.entities.Principals;
+import com.imdbapp.app.DAO.entities.Titles;
 import com.imdbapp.app.DAO.repositories.NamesRepository;
 import com.imdbapp.app.DAO.repositories.PrincipalsRepository;
 import com.imdbapp.app.DAO.repositories.TitlesRepository;
 import com.imdbapp.app.DTO.ActorDto;
 import com.imdbapp.app.DTO.CastDto;
+import com.imdbapp.app.DTO.KnownForActorsByTitleDto;
+import com.imdbapp.app.DTO.TitlesDto;
 import com.imdbapp.app.exceptions.TitleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -74,10 +77,28 @@ public class PrincipalsServiceImpl implements PrincipalsService {
         }
     }
 
-        public static List<String> split(String str){
+    @Override
+    public KnownForActorsByTitleDto listOfActorsByTitle(String primaryTitle) throws TitleNotFoundException {
+        try {
+            Titles titles = titleService.getTitleByPrimaryTitle(primaryTitle);
+
+              KnownForActorsByTitleDto knownForActors =       KnownForActorsByTitleDto.builder()
+                    .primaryTitle(titles.getOriginalTitle())
+                    .knownCastAndCrew(namesToList(namesRepository.findNamesByKnownForTitlesContains(titles.getTconst()))).build();
+
+            return knownForActors;
+        } catch (Exception e) {
+            throw new TitleNotFoundException(e.getMessage());
+        }
+    }
+
+    public static List<String> split(String str){
             return Stream.of(str.split(","))
                     .map (elem -> new String(elem))
                     .collect(Collectors.toList());
+        }
+        static List<String> namesToList(List<Names> names){
+        return names.stream().map( s -> s.getPrimaryName()).collect(Collectors.toList());
         }
     }
 

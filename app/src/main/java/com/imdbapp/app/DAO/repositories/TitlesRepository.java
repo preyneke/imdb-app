@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface TitlesRepository extends PagingAndSortingRepository<Titles, Integer> {
-List<Titles>  findTitlesByTconstIn(List<String> tconst);
-List<Titles> findTitlesByOriginalTitleContaining(String title, Pageable pageable);
+    List<Titles>  findTitlesByTconstIn(List<String> tconst);
+    List<Titles> findTitlesByOriginalTitleContaining(String title, Pageable pageable);
+    Titles findTitlesByOriginalTitle (String title);
 }

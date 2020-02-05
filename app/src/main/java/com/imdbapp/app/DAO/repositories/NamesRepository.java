@@ -12,4 +12,5 @@ public interface NamesRepository extends JpaRepository<Names, Long> {
     Names findByNconst(String nconst);
     List<Names> findNamesByKnownForTitlesContains(String tconst);
     List<Names> findNamesByPrimaryName(String name);
+
 }

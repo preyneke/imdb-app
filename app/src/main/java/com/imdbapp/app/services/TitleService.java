@@ -11,4 +11,5 @@ public interface TitleService {
     List<String> getTitlesNameByTconst(List<String> tconst);
     Titles getTitleBytconst(String tConst);
     List<TitlesDto> getTitlesByTitle(String title, int size) throws TitleNotFoundException;
+    Titles getTitleByPrimaryTitle(String title) throws TitleNotFoundException;
 }

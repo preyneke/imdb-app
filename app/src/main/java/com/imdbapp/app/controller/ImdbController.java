@@ -1,6 +1,7 @@
 package com.imdbapp.app.controller;
 
 import com.imdbapp.app.DTO.ActorDto;
+import com.imdbapp.app.DTO.KnownForActorsByTitleDto;
 import com.imdbapp.app.DTO.TopTitlesDto;
 import com.imdbapp.app.DTO.TitlesDto;
 import com.imdbapp.app.exceptions.TitleNotFoundException;
@@ -57,6 +58,12 @@ public class ImdbController {
     public List<ActorDto> getActorByName(@RequestParam("name") String name) throws TitleNotFoundException {
 
         return principalsService.listOfActorsByName(name);
+    }
+
+    @GetMapping("/actorsByTitle")
+    public KnownForActorsByTitleDto getActorByTiles(@RequestParam("title") String title) throws TitleNotFoundException {
+
+        return principalsService.listOfActorsByTitle(title);
     }
 
 
